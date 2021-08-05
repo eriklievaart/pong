@@ -1,0 +1,8 @@
+
+[compile]
+toolkit @local @snapshot
+guice com.google.inject 1.0
+
+[test]
+junit junit 4.7
+
