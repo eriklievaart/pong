@@ -1,4 +1,4 @@
-package pong;
+package com.eriklievaart.pong.ui;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -6,9 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
+import com.eriklievaart.pong.game.GameState;
 import com.google.inject.Inject;
-
-import util.game.GameState;
 
 public class GameRenderer {
 

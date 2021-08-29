@@ -1,4 +1,4 @@
-package util.input;
+package com.eriklievaart.pong.ui.keys;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

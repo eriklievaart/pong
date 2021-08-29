@@ -1,4 +1,4 @@
-package util.input;
+package com.eriklievaart.pong.ui.keys;
 
 import com.eriklievaart.toolkit.lang.api.ToString;
 

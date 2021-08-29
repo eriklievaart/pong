@@ -1,11 +1,9 @@
-package boot;
+package com.eriklievaart.pong.game;
 
+import com.eriklievaart.pong.ui.keys.GameKeyMonitor;
+import com.eriklievaart.pong.ui.keys.KeyAction;
+import com.eriklievaart.pong.ui.keys.KeyMapping;
 import com.google.inject.Inject;
-
-import util.game.GameState;
-import util.input.GameKeyMonitor;
-import util.input.KeyAction;
-import util.input.KeyMapping;
 
 public class GameActions {
 

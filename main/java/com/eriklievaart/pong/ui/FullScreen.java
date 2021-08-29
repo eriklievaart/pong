@@ -1,4 +1,4 @@
-package util;
+package com.eriklievaart.pong.ui;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;

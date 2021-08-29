@@ -1,11 +1,9 @@
-package pong;
+package com.eriklievaart.pong.ui;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.JFrame;
-
-import util.FullScreen;
 
 public class GameFrame extends JFrame {
 

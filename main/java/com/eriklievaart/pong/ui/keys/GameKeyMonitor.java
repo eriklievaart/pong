@@ -1,4 +1,4 @@
-package util.input;
+package com.eriklievaart.pong.ui.keys;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

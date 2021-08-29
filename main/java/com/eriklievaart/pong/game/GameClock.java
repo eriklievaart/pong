@@ -1,11 +1,10 @@
-package util.game;
+package com.eriklievaart.pong.game;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.eriklievaart.pong.ui.GameFrame;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import pong.GameFrame;
 
 @Singleton
 public class GameClock implements Runnable {

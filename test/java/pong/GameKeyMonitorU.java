@@ -4,11 +4,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
+import com.eriklievaart.pong.ui.keys.GameKeyMonitor;
+import com.eriklievaart.pong.ui.keys.KeyAction;
+import com.eriklievaart.pong.ui.keys.KeyMapping;
 import com.eriklievaart.toolkit.lang.api.check.Check;
-
-import util.input.GameKeyMonitor;
-import util.input.KeyAction;
-import util.input.KeyMapping;
 
 public class GameKeyMonitorU {
 

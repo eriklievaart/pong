@@ -1,9 +1,8 @@
-package util.game;
+package com.eriklievaart.pong.game;
 
+import com.eriklievaart.pong.ui.keys.GameKeyMonitor;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import util.input.GameKeyMonitor;
 
 @Singleton
 public class GameState {

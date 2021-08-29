@@ -1,13 +1,13 @@
-package boot;
+package com.eriklievaart.pong.boot;
 
+import com.eriklievaart.pong.game.GameActions;
+import com.eriklievaart.pong.game.GameClock;
+import com.eriklievaart.pong.ui.GameFrame;
+import com.eriklievaart.pong.ui.GameRenderer;
+import com.eriklievaart.pong.ui.keys.GameKeyListener;
 import com.eriklievaart.toolkit.swing.api.SwingThread;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import pong.GameFrame;
-import pong.GameRenderer;
-import util.game.GameClock;
-import util.input.GameKeyListener;
 
 public class Main {
 
