@@ -1,0 +1,271 @@
+
+<style>
+	canvas {
+		background: grey;
+	}
+</style>
+
+<canvas></canvas>
+
+<script id="run">
+console.clear();
+var canvas = document.querySelector('canvas');
+canvas.width = window.innerWidth - 10;
+canvas.height = window.innerHeight - 10;
+
+var c = canvas.getContext('2d');
+
+running = true;
+playerScore = 0;
+enemyScore = 0;
+
+bgw = 600;
+bgh = 600;
+translateX = (canvas.width - bgw) / 2;
+translateY = (canvas.height - bgh) / 2;
+c.translate(translateX, translateY);
+
+class Sprite {
+	constructor(x, y, w, h) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+		this.dx = 0;
+		this.dy = 0;
+		this.visible = true;
+		this.color = "white";
+	}
+
+	getLeft() {
+		return this.x - this.w/2;
+	}
+
+	getRight() {
+		return this.x + this.w/2;
+	}
+
+	getTop() {
+		return this.y - this.h/2;
+	}
+
+	getBottom() {
+		return this.y + this.h/2;
+	}
+
+	updatePosition() {
+		this.y += this.dy;
+		this.x += this.dx;
+	}
+
+	respectBounds() {
+		if(this.y - this.h/2 < 0) {
+			this.y = this.h/2;
+		}
+		if(this.y + this.h/2 > bgh) {
+			this.y = bgh - this.h/2;
+		}
+	}
+
+	isAtEdge() {
+		return this.x <= this.w || this.x >= bgw - this.w;
+	}
+
+	relativeTo(sprite) {
+		this.y = sprite.y;
+	}
+
+	followBall(sprite) {
+		var dy = sprite.y - this.y;
+
+		if(dy < 0) {
+			this.dy = Math.max(dy, -5);
+		}
+		if(dy == 0) {
+			this.dy = 0;
+		}
+		if(dy > 0) {
+			this.dy = Math.min(dy, 5);
+		}
+	}
+
+	toString() {
+		return this.x + ':' + this.y + ' - ' + this.dx + ':' + this.dy;
+	}
+}
+
+barWidth = 10;
+barHeight = 50;
+barOffset = 20;
+
+playerX = barOffset + barWidth/2;
+playerY = bgh/2;
+var player = new Sprite(playerX, playerY, barWidth, barHeight);
+
+enemyX = bgw - barOffset - barWidth/2;
+enemyY = bgh/2;
+var enemy = new Sprite(enemyX, enemyY, barWidth, barHeight);
+
+ballR = 5;
+ballX = playerX + barWidth/2 + ballR;
+ballY = playerY;
+var ball = new Sprite(ballX, ballY, 2*ballR, 2*ballR);
+ball.color = "yellow";
+
+var count = 10 * 60;
+sticky = true;
+dbx = 0;
+dby = 0;
+
+function drawBar(sprite) {
+	if(!sprite.visible) {
+		return;
+	}
+	c.fillStyle = sprite.color;
+	var x = sprite.getLeft();
+	var y = sprite.getTop();
+	c.fillRect(x, y, sprite.w, sprite.h);
+}
+
+function drawBall(sprite) {
+	if(!sprite.visible) {
+		return;
+	}
+	c.fillStyle = sprite.color;
+	c.beginPath();
+	c.arc(sprite.x, sprite.y, sprite.w/2, 0, 2*Math.PI)
+	c.fillStyle = sprite.color;
+	c.fill();
+}
+
+function isOverlap(minA, maxA, minB, maxB) {
+	return minA <= maxB && minB <= maxA;
+}
+
+function isCollision(ball, bar) {
+	al = ball.getLeft();
+	ar = ball.getRight();
+	bl = bar.getLeft();
+	br = bar.getRight();
+
+	at = ball.getTop();
+	ab = ball.getBottom();
+	bt = bar.getTop();
+	bb = bar.getBottom();
+
+	return isOverlap(al, ar, bl, br) && isOverlap(at, ab, bt, bb);
+}
+
+function procCollision(ball, bar) {
+	if(sticky) {
+		return;
+	}
+	if(ball.y - ball.h/2 <= 1) {
+		ball.dy = -ball.dy + 1;
+		ball.y += ball.dy;
+	}
+	if(ball.y + ball.h/2 >= bgh - 1) {
+		ball.dy = -ball.dy - 1;
+		ball.y += ball.dy;
+	}
+	if(!isCollision(ball, bar)) {
+		return;
+	}
+	ball.speed += 1;
+
+	y = ball.y;
+	oldX = ball.x - ball.dx;
+
+	dx = bar.x - oldX;
+	dy = bar.y - ball.y;
+	diag = Math.sqrt(dx**2 + dy**2);
+
+	ball.dx = Math.round(-dx/diag * ball.speed);
+	ball.dy = Math.round(-dy/diag * ball.speed);
+}
+
+function frame() {
+	c.fillStyle = "black";
+	c.fillRect(0, 0, bgw, bgh);
+
+	player.updatePosition();
+	player.respectBounds();
+	enemy.followBall(ball);
+	enemy.updatePosition();
+	enemy.respectBounds();
+
+	if(sticky) {
+		ball.relativeTo(player);
+	} else {
+		ball.updatePosition();
+		if(ball.isAtEdge()) {
+			if(ball.x >= bgw/2) {
+				playerScore++;
+			} else {
+				enemyScore++;
+			}
+			ball.x = player.x + player.w/2 + ball.w/2;
+			sticky = true;
+		}
+	}
+	procCollision(ball, player);
+	procCollision(ball, enemy);
+
+	drawBar(player);
+	drawBar(enemy);
+	drawBall(ball);
+
+	var score = playerScore + ":" + enemyScore;
+	c.font = "40px Arial";
+	c.fillStyle = "white";
+	var width = c.measureText(score).width;
+	c.fillText(score, bgw/2 - width/2, 40);
+
+	if(running) {
+		requestAnimationFrame(frame);
+	}
+}
+
+document.onkeydown = function (e) {
+	if(e.key == 'ArrowDown') {
+		player.dy = 5;
+	}
+	if(e.key == 'ArrowUp') {
+		player.dy = -5;
+	}
+	if(sticky && e.code == 'Space') {
+		sticky = false;
+		ball.speed = 5;
+		ball.dx = 5;
+		ball.dy = 4* (Math.random() - 0.5);
+	}
+};
+
+document.onkeyup = function (e) {
+	if(e.key == 'ArrowDown' && player.dy > 0) {
+		player.dy = 0;
+		return false;
+	}
+	if(e.key == 'ArrowUp' && player.dy < 0) {
+		player.dy = 0;
+		return false;
+	}
+};
+
+document.onclick = function(e) {
+	running = !running;
+	frame();
+}
+
+frame();
+
+</script>
+
+
+
+
+
+
+
+
+
